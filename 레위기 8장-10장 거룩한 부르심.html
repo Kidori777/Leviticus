@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>레위기 8-10장 | 거룩한 부르심</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ivory: #FAF6EC;
+    --ivory-deep: #F1E9D8;
+    --ink: #2B2017;
+    --ink-soft: #5C4F3E;
+    --gold: #B8862F;
+    --gold-light: #E8C873;
+    --gold-pale: #F4E3B2;
+    --blood: #7A1F1F;
+    --blood-deep: #4E1212;
+    --ember: #D9622B;
+    --judgment: #3A4750;
+    --judgment-deep: #232C32;
+    --line: rgba(43,32,23,0.14);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Noto Serif KR', serif;
+    font-style:normal;
+    background:var(--ivory);
+    color:var(--ink);
+    overflow-x:hidden;
+    line-height:1.9;
+  }
+  i, em{font-style:normal;}
+
+  #bgCanvas{
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    z-index:0;
+    pointer-events:none;
+    transition:background 1.8s ease;
+  }
+
+  .wrap{ position:relative; z-index:2; }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:40px 24px;
+    position:relative;
+  }
+  .hero-eyebrow{
+    font-size:13px;
+    letter-spacing:0.45em;
+    color:var(--gold);
+    font-weight:500;
+    margin-bottom:28px;
+    opacity:0;
+    animation:fadeIn 1.6s ease 0.3s forwards;
+  }
+  .hero-title{
+    font-size:clamp(40px, 8vw, 84px);
+    font-weight:700;
+    letter-spacing:0.02em;
+    color:var(--ink);
+    opacity:0;
+    animation:fadeUp 1.8s ease 0.6s forwards;
+  }
+  .hero-title .small{
+    display:block;
+    font-size:0.34em;
+    font-weight:400;
+    letter-spacing:0.5em;
+    color:var(--ink-soft);
+    margin-top:18px;
+  }
+  .hero-sub{
+    margin-top:36px;
+    max-width:560px;
+    font-size:17px;
+    color:var(--ink-soft);
+    font-weight:300;
+    line-height:2;
+    opacity:0;
+    animation:fadeUp 1.8s ease 1.1s forwards;
+  }
+  .hero-flame{
+    width:1px;
+    height:90px;
+    background:linear-gradient(to bottom, transparent, var(--gold));
+    margin-top:56px;
+    opacity:0;
+    animation:fadeIn 2s ease 1.6s forwards;
+  }
+  @keyframes fadeIn{to{opacity:1;}}
+  @keyframes fadeUp{from{opacity:0; transform:translateY(24px);} to{opacity:1; transform:translateY(0);}}
+
+  /* ---------- SECTION ---------- */
+  .section{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:140px 24px;
+    position:relative;
+  }
+  .panel{
+    max-width:680px;
+    width:100%;
+    opacity:0;
+    transform:translateY(40px);
+    transition:opacity 1.1s ease, transform 1.1s ease;
+  }
+  .panel.is-visible{
+    opacity:1;
+    transform:translateY(0);
+  }
+  .tag{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    font-size:12.5px;
+    letter-spacing:0.32em;
+    color:var(--gold);
+    font-weight:500;
+    margin-bottom:30px;
+  }
+  .tag::before{
+    content:"";
+    width:22px; height:1px;
+    background:var(--gold);
+  }
+  .verse{
+    font-size:clamp(22px, 3.4vw, 30px);
+    font-weight:600;
+    color:var(--ink);
+    line-height:1.7;
+    margin-bottom:14px;
+  }
+  .ref{
+    font-size:14px;
+    color:var(--ink-soft);
+    font-weight:400;
+    letter-spacing:0.04em;
+    margin-bottom:38px;
+  }
+  .body-text{
+    font-size:16.5px;
+    font-weight:300;
+    color:var(--ink-soft);
+    line-height:2.05;
+    letter-spacing:0.01em;
+  }
+  .body-text strong{
+    font-weight:600;
+    color:var(--ink);
+  }
+  .divider{
+    width:46px; height:2px;
+    background:var(--gold);
+    margin:46px 0 0;
+    opacity:0.55;
+  }
+  .lead{
+    font-size:14.5px;
+    font-weight:300;
+    color:var(--ink-soft);
+    letter-spacing:0.02em;
+    margin-bottom:22px;
+    opacity:0.85;
+  }
+  .lead-dark{ color:rgba(43,32,23,0.6); }
+
+  /* section accent variants */
+  .section.gold .verse{ color:var(--ink); }
+  .section.gold .tag{ color:var(--gold); }
+  .section.gold .divider{ background:var(--gold); }
+
+  .section.blood .tag{ color:var(--blood); }
+  .section.blood .divider{ background:var(--blood); }
+  .section.blood .verse{ color:#3a1414; }
+
+  .section.fire .tag{ color:var(--ember); }
+  .section.fire .divider{ background:var(--ember); }
+  .section.fire .verse{ color:#3a1c0c; }
+
+  .section.judgment{ color:var(--ivory); }
+  .section.judgment .tag{ color:var(--gold-light); }
+  .section.judgment .verse{ color:var(--ivory); }
+  .section.judgment .ref{ color:rgba(250,246,236,0.65); }
+  .section.judgment .body-text{ color:rgba(250,246,236,0.78); }
+  .section.judgment .divider{ background:var(--gold-light); }
+  .section.judgment .body-text strong{ color:var(--ivory); }
+  .section.judgment .lead{ color:rgba(250,246,236,0.6); }
+
+  /* climax glory section */
+  .glory{
+    text-align:center;
+  }
+  .glory .verse{
+    font-size:clamp(26px, 4.2vw, 40px);
+    font-weight:700;
+  }
+  .glory-ring{
+    width:120px; height:120px;
+    border-radius:50%;
+    margin:0 auto 40px;
+    background:radial-gradient(circle, var(--gold-light) 0%, var(--gold) 55%, transparent 75%);
+    filter:blur(2px);
+    opacity:0.85;
+  }
+
+  /* ---------- CLOSING ---------- */
+  .closing{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:140px 24px 160px;
+    background:linear-gradient(180deg, var(--ivory-deep) 0%, var(--ivory) 100%);
+  }
+  .closing .panel{ max-width:620px; }
+  .closing-mark{
+    font-size:13px;
+    letter-spacing:0.4em;
+    color:var(--gold);
+    margin-bottom:30px;
+  }
+  .closing-line{
+    font-size:clamp(22px, 3.4vw, 30px);
+    font-weight:600;
+    line-height:1.85;
+    margin-bottom:30px;
+    color:var(--ink);
+  }
+  .closing-sub{
+    font-size:15.5px;
+    color:var(--ink-soft);
+    font-weight:300;
+    line-height:2.1;
+  }
+  .closing-foot{
+    margin-top:60px;
+    font-size:12.5px;
+    letter-spacing:0.2em;
+    color:var(--ink-soft);
+    opacity:0.6;
+  }
+
+  /* progress thread */
+  .thread{
+    position:fixed;
+    top:0; left:0;
+    width:100%;
+    height:3px;
+    z-index:50;
+    background:rgba(43,32,23,0.08);
+  }
+  .thread-fill{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg, var(--gold) 0%, var(--ember) 60%, var(--blood) 100%);
+    transition:width 0.1s linear;
+  }
+
+  @media (max-width:640px){
+    .section{ padding:110px 22px; }
+    .hero{ padding:30px 20px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    .panel{ transition:none; opacity:1; transform:none; }
+    .hero-eyebrow, .hero-title, .hero-sub, .hero-flame{ animation:none; opacity:1; }
+  }
+</style>
+</head>
+<body>
+
+<div class="thread"><div class="thread-fill" id="threadFill"></div></div>
+<canvas id="bgCanvas"></canvas>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-eyebrow">LEVITICUS 8 · 9 · 10</div>
+    <h1 class="hero-title">거룩한 부르심
+      <span class="small">레위기 8 - 10 장</span>
+    </h1>
+    <p class="hero-sub">
+      씻음에서 기름부음으로, 기름부음에서 피로,<br>
+      피에서 불로 — 사람이 다시 하나님과 함께 거하기까지,<br>
+      하나님께서 친히 세우신 그 길을 따라간다.
+    </p>
+    <div class="hero-flame"></div>
+  </section>
+
+  <!-- 1. 말씀하셨다 -->
+  <section class="section" data-theme="gold">
+    <div class="panel">
+      <div class="tag">시작</div>
+      <p class="verse">여호와께서 모세에게 말씀하셨다.</p>
+      <p class="ref">레위기 8:1</p>
+      <p class="body-text">이 한 문장은 단순한 서술이 아니라, 창조로부터 이어져 온 하나님의 경륜이 다시 한번 역사 속에서 구체화되는 순간을 드러냅니다. 하나님은 태초에 말씀으로 세상을 창조하셨고, 그 창조의 목적은 사람이 하나님과 연합하여 그분의 생명을 누리는 데 있었습니다. 그러나 사람은 그 생명에서 떠났고, 하나님은 다시 사람을 자신에게로 돌이키기 위한 길을 마련하십니다. 레위기 8장은 바로 그 “돌아오는 길”이 어떻게 실제로 세워지는지를 보여줍니다.</p>
+      <div class="divider"></div>
+    </div>
+  </section>
+
+  <!-- 2. 선택 -->
+  <section class="section" data-theme="gold">
+    <div class="panel">
+      <div class="tag">선택</div>
+      <p class="verse">너는 아론과 그의 아들들을 함께 데려오고…</p>
+      <p class="ref">레위기 8:2</p>
+      <p class="body-text">하나님께서 특정한 사람들을 부르십니다. 이것은 단순한 직분의 임명이 아니라 “선택”입니다. 창조 때 모든 사람이 하나님을 위해 지음 받았지만, 이제 하나님은 대표자를 세우셔서 잃어버린 관계를 회복하려 하십니다. 아론과 그의 아들들은 단순한 개인이 아니라, 하나님과 사람 사이를 잇는 통로로 선택된 존재입니다.</p>
+      <div class="divider"></div>
+    </div>
+  </section>
+
+  <!-- 3. 정결 -->
+  <section class="section" data-theme="gold">
+    <div class="panel">
+      <div class="tag">정결</div>
+      <p class="verse">모세는 아론과 그의 아들들을 가까이 데려다가 물로 씻겼다.</p>
+      <p class="ref">레위기 8:6</p>
+      <p class="body-text">물로 씻는 장면은 단순한 정결 의식이 아닙니다. 이것은 창조 때 “깨끗한 상태”로 지음 받은 사람의 회복을 상징합니다. 하나님께 나아가기 위해서는 먼저 정결함이 필요합니다. 그러나 이 정결은 사람이 스스로 만드는 것이 아니라, 하나님께서 주시는 것입니다. 하나님은 사람을 다시 시작하게 하십니다.</p>
+      <div class="divider"></div>
+    </div>
+  </section>
+
+  <!-- 4. 옷 입힘 -->
+  <section class="section" data-theme="gold">
+    <div class="panel">
+      <div class="tag">새로운 정체성</div>
+      <p class="verse">긴 속옷을 입히고… 에봇을 입히고… 가슴받이를 달아 주고…</p>
+      <p class="ref">레위기 8:7-8</p>
+      <p class="body-text">사람은 본래 하나님의 형상을 입은 존재였습니다. 그러나 타락 이후 그 형상은 가려졌습니다. 이제 하나님은 제사장에게 새로운 옷을 입히심으로, 하나님 앞에 설 수 있는 “새로운 존재”로 세우십니다. 이것은 단순한 장식이 아니라, 하나님과의 관계 안에서 새롭게 정의된 정체성입니다.</p>
+      <div class="divider"></div>
+    </div>
+  </section>
+
+  <!-- 5. 거룩한 기름 -->
+  <section class="section" data-theme="gold">
+    <div class="panel">
+      <div class="tag">생명</div>
+      <p class="verse">바르는 기름을 가져다가… 그것들을 거룩하게 하였다.</p>
+      <p class="ref">레위기 8:10</p>
+      <p class="body-text">기름 부음은 생명을 의미합니다. 창조 때 하나님께서 사람에게 생기를 불어넣으신 것처럼, 이제 하나님은 기름을 통해 그들을 거룩하게 하십니다. 거룩함은 도덕적 완전함이 아니라, 하나님께 속하는 상태입니다. 즉, 생명이 하나님께 연결된 상태입니다.</p>
+      <div class="divider"></div>
+    </div>
+  </section>
+
+  <!-- 6. 머리에 부음 -->
+  <section class="section" data-theme="gold">
+    <div class="panel">
+      <div class="tag">위로부터</div>
+      <p class="verse">바르는 기름 얼마를 아론의 머리 위에 붓고 그에게 발라 그를 거룩하게 하였다.</p>
+      <p class="ref">레위기 8:12</p>
+      <p class="body-text">머리에 부어진 기름은 위로부터 오는 생명을 의미합니다. 사람의 노력이나 자격이 아니라, 하나님께서 내려주시는 생명입니다. 하나님은 사람을 통해 일하시기 전에 먼저 그 사람을 자신의 생명으로 채우십니다.</p>
+      <div class="divider"></div>
+    </div>
+  </section>
+
+  <!-- 7. 속죄제 -->
+  <section class="section blood" data-theme="blood">
+    <div class="panel">
+      <div class="tag">동일시</div>
+      <p class="lead">그러나 여전히 해결되지 않은 문제가 있습니다. 바로 죄입니다.</p>
+      <p class="verse">속죄제물로 바칠 황소… 아론과 그의 아들들은… 그 머리에 손을 얹었다.</p>
+      <p class="ref">레위기 8:14</p>
+      <p class="body-text">손을 얹는 행위는 동일시를 의미합니다. 사람의 죄가 제물로 옮겨지는 것입니다. 이는 창조의 질서가 깨진 상태를 회복하기 위한 하나님의 방법입니다. 생명은 죄를 통과하지 않고서는 회복될 수 없기 때문입니다.</p>
+      <div class="divider"></div>
+    </div>
+  </section>
+
+  <!-- 8. 피 -->
+  <section class="section blood" data-theme="blood">
+    <div class="panel">
+      <div class="tag">생명을 통한 생명</div>
+      <p class="verse">그 피를… 제단 뿔들 위에 바르고… 제단을 거룩하게 하였다.</p>
+      <p class="ref">레위기 8:15</p>
+      <p class="body-text">피는 생명입니다. 하나님은 생명을 통해 생명을 회복하십니다. 죽음을 통해서가 아니라, 생명을 내어줌으로써 생명을 다시 연결하십니다. 이것이 하나님의 방식입니다.</p>
+      <div class="divider"></div>
+    </div>
+  </section>
+
+  <!-- 9. 번제 -->
+  <section class="section fire" data-theme="fire">
+    <div class="panel">
+      <div class="tag">전부를 드림</div>
+      <p class="lead">이어 번제와 헌신의 제사가 이어집니다.</p>
+      <p class="verse">그것은 여호와를 만족시키는 향기로 바쳐진 번제물이며…</p>
+      <p class="ref">레위기 8:21</p>
+      <p class="body-text">번제는 전부를 드리는 제사입니다. 이는 사람이 하나님께 완전히 속하는 상태를 의미합니다. 창조의 목적은 바로 이것이었습니다. 사람이 하나님과 완전히 연합하는 것.</p>
+      <div class="divider"></div>
+    </div>
+  </section>
+
+  <!-- 10. 헌신의 절정 -->
+  <section class="section fire" data-theme="fire">
+    <div class="panel">
+      <div class="tag">삶 전체의 방향</div>
+      <p class="lead">그리고 헌신의 절정이 나타납니다.</p>
+      <p class="verse">그 피를… 아론의 오른쪽 귓불과 오른손 엄지와 오른발 엄지에 발랐다.</p>
+      <p class="ref">레위기 8:23</p>
+      <p class="body-text">귀는 듣는 것을, 손은 행하는 것을, 발은 걷는 길을 의미합니다. 즉, 제사장의 존재 전체가 하나님께 속하게 되는 것입니다. 이것은 단순한 의식이 아니라 “삶 전체의 방향 전환”입니다. 하나님께 속한 존재로 살아가는 삶입니다.</p>
+      <div class="divider"></div>
+    </div>
+  </section>
+
+  <!-- 11. 칠일 -->
+  <section class="section" data-theme="gold">
+    <div class="panel">
+      <div class="tag">머묾</div>
+      <p class="lead">이 모든 과정은 하루로 끝나지 않습니다.</p>
+      <p class="verse">칠 일 동안… 회막 입구에 머물면서…</p>
+      <p class="ref">레위기 8:35</p>
+      <p class="body-text">시간이 필요합니다. 하나님과의 연합은 순간적인 사건이 아니라, 지속적인 머묾을 통해 이루어집니다. 하나님 앞에 머무는 것이 곧 생명입니다.</p>
+      <div class="divider"></div>
+    </div>
+  </section>
+
+  <!-- 12. 여덟째 날 -->
+  <section class="section" data-theme="gold">
+    <div class="panel">
+      <div class="tag">새로운 시작</div>
+      <p class="lead">그리고 여덟째 날이 옵니다.</p>
+      <p class="verse">팔 일째 되는 날…</p>
+      <p class="ref">레위기 9:1</p>
+      <p class="body-text">여덟째 날은 새로운 시작을 의미합니다. 창조의 일곱 날을 넘어서는 새로운 창조입니다. 이제 제사장은 실제로 하나님과 사람 사이에서 기능하기 시작합니다.</p>
+      <div class="divider"></div>
+    </div>
+  </section>
+
+  <!-- 13. 나타나실 것 -->
+  <section class="section" data-theme="gold">
+    <div class="panel">
+      <div class="tag">목적</div>
+      <p class="verse">오늘 여호와께서 여러분에게 나타나실 것입니다.</p>
+      <p class="ref">레위기 9:4</p>
+      <p class="body-text">이것이 모든 과정의 목적입니다. 하나님이 나타나시는 것. 사람이 준비되는 이유는 하나님이 드러나시기 위함입니다.</p>
+      <div class="divider"></div>
+    </div>
+  </section>
+
+  <!-- 14. 자신과 백성 -->
+  <section class="section blood" data-theme="blood">
+    <div class="panel">
+      <div class="tag">먼저 자신으로부터</div>
+      <p class="lead">아론은 제사를 드립니다.</p>
+      <p class="verse">자신과 백성을 위하여 속죄하십시오.</p>
+      <p class="ref">레위기 9:7</p>
+      <p class="body-text">먼저 자신, 그리고 백성. 하나님께 나아가는 길은 항상 자신으로부터 시작됩니다. 하나님과의 관계가 먼저 회복되어야 다른 사람을 위한 통로가 될 수 있습니다.</p>
+      <div class="divider"></div>
+    </div>
+  </section>
+
+  <!-- 15. 영광 GLORY CLIMAX -->
+  <section class="section fire glory" data-theme="glory">
+    <div class="panel">
+      <div class="glory-ring"></div>
+      <div class="tag" style="justify-content:center;">임재</div>
+      <p class="lead" style="text-align:center;">그리고 마침내 그 순간이 옵니다.</p>
+      <p class="verse">여호와의 영광이 온 백성에게 나타났다.</p>
+      <p class="ref">레위기 9:23</p>
+      <p class="body-text">하나님의 영광은 추상적인 개념이 아닙니다. 그것은 실제로 나타나는 하나님의 임재입니다. 사람이 준비되고, 제사가 이루어지고, 질서가 세워질 때 하나님은 자신을 드러내십니다.</p>
+      <div class="divider" style="margin-left:auto; margin-right:auto;"></div>
+    </div>
+  </section>
+
+  <!-- 16. 불이 나와 -->
+  <section class="section fire glory" data-theme="glory">
+    <div class="panel">
+      <div class="tag" style="justify-content:center;">인정</div>
+      <p class="verse">여호와 앞에서 불이 나와… 제단 위의 번제물을 불태웠다.</p>
+      <p class="ref">레위기 9:24</p>
+      <p class="body-text">이 불은 심판이 아니라 “인정”입니다. 하나님께서 그 제사를 받으셨다는 표시입니다. 창조 때 하나님이 보시기에 좋았던 것처럼, 이제 다시 하나님이 받으실 수 있는 상태가 된 것입니다.</p>
+      <div class="divider" style="margin-left:auto; margin-right:auto;"></div>
+    </div>
+  </section>
+
+  <!-- 17. 다른 불 - TURN -->
+  <section class="section judgment" data-theme="judgment">
+    <div class="panel">
+      <div class="tag">자기 방식</div>
+      <p class="lead lead-dark">그러나 곧 이어지는 장면은 전혀 다른 방향을 보여줍니다.</p>
+      <p class="verse">그들은 여호와께서 명령하시지 않은 다른 불을… 바쳤다.</p>
+      <p class="ref">레위기 10:1</p>
+      <p class="body-text">나답과 아비후는 같은 제사장이었지만, 하나님이 정하신 방식이 아닌 “자기 방식”으로 나아갔습니다. 하나님과의 연합은 인간의 열심으로 이루어지지 않습니다. 하나님이 정하신 길을 따라야 합니다.</p>
+      <div class="divider"></div>
+    </div>
+  </section>
+
+  <!-- 18. 태워버렸다 -->
+  <section class="section judgment" data-theme="judgment">
+    <div class="panel">
+      <div class="tag">거룩하신 분</div>
+      <p class="verse">여호와 앞에서 불이 나와 그들을 태워 버렸다.</p>
+      <p class="ref">레위기 10:2</p>
+      <p class="body-text">같은 불이지만, 어떤 이에게는 영광이 되고 어떤 이에게는 심판이 됩니다. 하나님은 임의로 접근할 수 있는 분이 아니라, 거룩하신 분입니다.</p>
+      <div class="divider"></div>
+    </div>
+  </section>
+
+  <!-- 19. 거룩하게 되며 -->
+  <section class="section judgment" data-theme="judgment">
+    <div class="panel">
+      <div class="tag">하나님의 경륜</div>
+      <p class="verse">나는 내게 가까이 오는 사람들 가운데서 거룩하게 되며…</p>
+      <p class="ref">레위기 10:3</p>
+      <p class="body-text">하나님은 자신의 방식으로만 알려지기를 원하십니다. 이것이 하나님의 경륜입니다. 사람의 생각이 아니라, 하나님의 뜻이 기준이 됩니다.</p>
+      <div class="divider"></div>
+    </div>
+  </section>
+
+  <!-- 20. 분별 -->
+  <section class="section" data-theme="gold">
+    <div class="panel">
+      <div class="tag">분별의 삶</div>
+      <p class="lead">그리고 마지막으로 중요한 명령이 주어집니다.</p>
+      <p class="verse">거룩한 것과 속된 것… 부정한 것과 정결한 것을 분별하게 하며</p>
+      <p class="ref">레위기 10:10</p>
+      <p class="body-text">하나님과 연합된 삶은 “분별”의 삶입니다. 생명과 죽음, 거룩과 속됨을 구별하는 것입니다. 이것이 제사장의 역할이며, 하나님과 연결된 사람의 삶입니다.</p>
+      <div class="divider"></div>
+    </div>
+  </section>
+
+  <!-- CLOSING -->
+  <section class="closing">
+    <div class="panel">
+      <div class="closing-mark">결론</div>
+      <p class="closing-line">이 모든 이야기는 하나로 수렴됩니다.</p>
+      <p class="closing-sub">
+        하나님은 창조 때부터 사람과 연합하기를 원하셨습니다. 그러나 그 연합은 아무 방식으로나 이루어지지 않습니다. 정결, 선택, 속죄, 헌신, 그리고 순종을 통해 이루어집니다.<br><br>
+        결국 레위기 8-10장은 말하고 있습니다.<br><br>
+        하나님의 궁극적인 목적은 단순히 죄를 해결하는 것이 아니라, 사람이 하나님과 함께 거하며 그분의 영광을 나타내는 존재가 되는 것입니다.<br><br>
+        그리하여 하나님이 사람 가운데 거하시고, 사람은 하나님 안에서 살아가는—그 창조의 목적이 다시 회복되는 것입니다.
+      </p>
+      <div class="closing-foot">레위기 8 · 9 · 10장 — 하나님의 영원한 경륜 시리즈</div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  // ---------- scroll reveal ----------
+  const panels = document.querySelectorAll('.panel');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('is-visible'); }
+    });
+  }, { threshold:0.22 });
+  panels.forEach(p=>io.observe(p));
+
+  // ---------- progress thread ----------
+  const threadFill = document.getElementById('threadFill');
+  function updateThread(){
+    const h = document.documentElement;
+    const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+    threadFill.style.width = scrolled + '%';
+  }
+  document.addEventListener('scroll', updateThread, {passive:true});
+  updateThread();
+
+  // ---------- canvas particle field (oil / blood / fire / judgment) ----------
+  const canvas = document.getElementById('bgCanvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+
+  const palette = {
+    gold:      { bg:'#FAF6EC', dot:[184,134,47],  glow:0.5 },
+    blood:     { bg:'#F5ECE3', dot:[122,31,31],   glow:0.4 },
+    fire:      { bg:'#FBF0DD', dot:[217,98,43],   glow:0.65 },
+    glory:     { bg:'#FCEFC9', dot:[232,200,115], glow:1.0 },
+    judgment:  { bg:'#27313A', dot:[200,210,216], glow:0.35 }
+  };
+  let current = 'gold';
+  let target = 'gold';
+
+  function resize(){
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function makeParticles(n){
+    particles = [];
+    for(let i=0;i<n;i++){
+      particles.push({
+        x: Math.random()*W,
+        y: Math.random()*H,
+        r: Math.random()*1.8 + 0.4,
+        vy: Math.random()*0.18 + 0.04,
+        vx: (Math.random()-0.5)*0.08,
+        o: Math.random()*0.5 + 0.15
+      });
+    }
+  }
+  makeParticles(70);
+
+  function lerp(a,b,t){ return a+(b-a)*t; }
+
+  function draw(){
+    const cur = palette[current];
+    const bgColor = cur.bg;
+    canvas.style.background = bgColor;
+
+    ctx.clearRect(0,0,W,H);
+    const [r,g,b] = cur.dot;
+    particles.forEach(p=>{
+      p.y -= p.vy;
+      p.x += p.vx;
+      if(p.y < -10){ p.y = H + 10; p.x = Math.random()*W; }
+      if(p.x < -10) p.x = W+10;
+      if(p.x > W+10) p.x = -10;
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(${r},${g},${b},${p.o * cur.glow})`;
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+
+  // ---------- theme switching by section ----------
+  const themedSections = document.querySelectorAll('[data-theme]');
+  const themeIO = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting && e.intersectionRatio > 0.4){
+        current = e.target.getAttribute('data-theme');
+      }
+    });
+  }, { threshold:[0.4, 0.6] });
+  themedSections.forEach(s=>themeIO.observe(s));
+</script>
+
+</body>
+</html>

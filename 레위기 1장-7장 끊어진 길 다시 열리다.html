@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>제물의 길 — 레위기 1~7장</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --char: #161210;       /* 숯 - 배경 */
+    --char-2: #1f1916;     /* 배경 보조 */
+    --blood: #3d1714;      /* 마른 피 */
+    --ember: #c1452a;      /* 제단 불꽃 */
+    --ember-bright: #e8703f;
+    --gold: #cf9a52;       /* 기름/유향 */
+    --bone: #ece2cd;       /* 고운가루/뼈 */
+    --olive: #5b6b44;      /* 화목/연합 */
+    --line: rgba(236,226,205,0.14);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--char);
+    color:var(--bone);
+    font-family:'Noto Serif KR', serif;
+    font-style:normal !important;
+    overflow-x:hidden;
+  }
+  i, em, .italic{font-style:normal !important;}
+
+  /* ---------- 배경 캔버스: 꺼지지 않는 불 ---------- */
+  #flame-canvas{
+    position:fixed; inset:0; width:100%; height:100%;
+    z-index:0; opacity:0.55; pointer-events:none;
+  }
+
+  .veil{
+    position:fixed; inset:0; z-index:1; pointer-events:none;
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 100%, rgba(193,69,42,0.18), transparent 60%),
+      linear-gradient(180deg, var(--char) 0%, transparent 12%, transparent 88%, var(--char) 100%);
+  }
+
+  main{position:relative; z-index:2;}
+
+  section{
+    position:relative;
+    min-height:100vh;
+    display:flex; flex-direction:column;
+    justify-content:center;
+    padding:8vh 8vw;
+  }
+
+  /* ---------- HERO ---------- */
+  #hero{
+    align-items:center; text-align:center;
+    gap:2.2rem;
+  }
+  .eyebrow{
+    letter-spacing:0.5em;
+    font-size:0.72rem;
+    color:var(--gold);
+    font-weight:500;
+    text-transform:uppercase;
+  }
+  h1.title{
+    font-size:clamp(2.6rem, 7vw, 5.2rem);
+    font-weight:200;
+    line-height:1.25;
+    letter-spacing:0.04em;
+  }
+  h1.title strong{
+    display:block;
+    font-weight:700;
+    color:var(--ember-bright);
+    margin-top:0.3rem;
+  }
+  .hero-verse{
+    max-width:36rem;
+    font-size:1.05rem;
+    line-height:2;
+    color:rgba(236,226,205,0.75);
+    margin-top:1rem;
+  }
+  .hero-verse .ref{
+    display:block; margin-top:0.6rem;
+    font-size:0.85rem; color:var(--gold); letter-spacing:0.1em;
+  }
+  .scroll-cue{
+    margin-top:3rem; font-size:0.75rem; letter-spacing:0.3em;
+    color:rgba(236,226,205,0.4);
+    animation: bob 2.4s ease-in-out infinite;
+  }
+  @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(8px);}}
+
+  /* ---------- 공통 텍스트 블록 ---------- */
+  .reveal{
+    opacity:0; transform:translateY(28px);
+    transition: opacity 1s ease, transform 1s ease;
+  }
+  .reveal.in{opacity:1; transform:translateY(0);}
+
+  .lead-text{
+    max-width:42rem;
+    font-size:1.12rem;
+    line-height:2.1;
+    color:rgba(236,226,205,0.86);
+    font-weight:300;
+  }
+  .lead-text + .lead-text{margin-top:1.4rem;}
+
+  blockquote{
+    max-width:38rem;
+    margin:2.4rem 0;
+    padding:1.6rem 0 1.6rem 2rem;
+    border-left:2px solid var(--ember);
+    font-size:1.2rem;
+    line-height:1.9;
+    color:var(--bone);
+    font-weight:400;
+  }
+  blockquote .ref{
+    display:block; margin-top:0.8rem;
+    font-size:0.82rem; letter-spacing:0.12em; color:var(--gold);
+  }
+
+  /* ---------- 제물 섹션 공통 ---------- */
+  .offering{
+    border-top:1px solid var(--line);
+    align-items:flex-start;
+  }
+  .offering-head{
+    display:flex; align-items:baseline; gap:1.4rem;
+    margin-bottom:2.6rem;
+  }
+  .offering-no{
+    font-size:0.85rem; letter-spacing:0.2em; color:var(--gold);
+    font-weight:500;
+  }
+  .offering-kr{
+    font-size:clamp(2rem, 4.2vw, 3.4rem);
+    font-weight:700;
+    letter-spacing:0.02em;
+  }
+  .offering-en{
+    font-size:0.8rem; letter-spacing:0.25em; color:rgba(236,226,205,0.45);
+    text-transform:uppercase;
+  }
+
+  .grid-2{
+    display:grid; grid-template-columns: 1.1fr 0.9fr;
+    gap:4rem; width:100%; align-items:start;
+  }
+  @media(max-width:880px){ .grid-2{grid-template-columns:1fr;} }
+
+  .glyph-box{
+    width:100%; aspect-ratio:1/1; max-width:340px;
+    position:relative;
+  }
+
+  /* ---------- 마무리 표 ---------- */
+  #summary{
+    border-top:1px solid var(--line);
+  }
+  .sum-row{
+    display:grid; grid-template-columns: 7rem 9rem 1fr;
+    gap:1.6rem; align-items:baseline;
+    padding:1.1rem 0;
+    border-bottom:1px solid var(--line);
+    max-width:48rem;
+  }
+  .sum-row .num{color:var(--gold); font-size:0.85rem; letter-spacing:0.15em;}
+  .sum-row .name{font-weight:600; font-size:1.15rem;}
+  .sum-row .desc{color:rgba(236,226,205,0.7); font-size:0.98rem; font-weight:300;}
+
+  #closing{
+    text-align:center; align-items:center;
+    background:linear-gradient(180deg, transparent, rgba(61,23,20,0.5));
+  }
+  #closing .lead-text{text-align:center; max-width:34rem;}
+  #closing blockquote{text-align:left;}
+  .signoff{
+    margin-top:3rem; font-size:0.78rem; letter-spacing:0.3em;
+    color:rgba(236,226,205,0.4);
+  }
+
+  ::selection{background:var(--ember); color:var(--char);}
+
+  @media(max-width:480px){
+    section{padding:7vh 6vw;}
+    .sum-row{
+      grid-template-columns: 1fr;
+      gap:0.3rem;
+      padding:1rem 0;
+    }
+    .sum-row .num{order:1;}
+    .sum-row .name{order:2;}
+    .sum-row .desc{order:3;}
+    .offering-head{flex-wrap:wrap; row-gap:0.4rem;}
+    blockquote{padding-left:1.2rem;}
+  }
+</style>
+</head>
+<body>
+
+<canvas id="flame-canvas"></canvas>
+<div class="veil"></div>
+
+<main>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="eyebrow">하나님의 영원한 경륜 시리즈 · 레위기 1장 — 7장</div>
+    <h1 class="title">끊어진 길,<strong>다시 열리다</strong></h1>
+    <p class="hero-verse">
+      “여호와께서 모세를 부르시고, 회막에서 그에게 말씀하셨다.”
+      <span class="ref">레위기 1:1</span>
+    </p>
+    <div class="scroll-cue">S C R O L L</div>
+  </section>
+
+  <!-- 도입 -->
+  <section id="intro">
+    <div class="reveal">
+      <p class="lead-text">출애굽기의 끝에서, 하나님의 영광이 성막에 가득하였습니다. 그 영광이 너무도 충만하여 모세조차 가까이 나아갈 수 없었습니다. 사람과 하나님 사이, 그 거리는 죄로 인해 처음부터 있어 온 것이었습니다.</p>
+      <p class="lead-text">그러나 레위기는 침묵으로 끝나지 않습니다. 하나님께서 다시 “부르십니다.” 이는 단절된 관계가 이어지는 첫 울림이며, 사람을 향하여 길을 여시는 장면입니다.</p>
+    </div>
+    <blockquote class="reveal">
+      “너희 가운데 누가 여호와에게 제물을 바칠 때에는…”
+      <span class="ref">레위기 1:2</span>
+    </blockquote>
+    <p class="lead-text reveal">하나님께 나아가는 길에는 반드시 ‘생명’이 요구됩니다. 다섯 가지 제물은 각기 다른 문을 통해, 결국 하나의 자리로 사람을 인도합니다. 그 자리는 하나님과 사람이 다시 하나 되는 자리입니다.</p>
+  </section>
+
+  <!-- 1. 번제 -->
+  <section class="offering" style="background:linear-gradient(180deg, transparent, rgba(193,69,42,0.06));">
+    <div class="offering-head reveal">
+      <span class="offering-no">01</span>
+      <h2 class="offering-kr">번제(燔祭)</h2>
+      <span class="offering-en">Burnt Offering</span>
+    </div>
+    <div class="grid-2">
+      <div class="reveal">
+        <p class="lead-text">죄 있는 사람은 스스로 하나님께 나아갈 수 없습니다. 그래서 흠 없는 다른 생명이 그 자리를 대신합니다. 머리에 손을 얹는 행위는 단순한 의식이 아니라, 자신의 존재를 그 제물과 연합시키는 행위입니다.</p>
+        <blockquote>
+          “그는 흠 없는 수컷을 바치되… 번제물의 머리에 손을 얹어야 한다.”
+          <span class="ref">레위기 1:3-4</span>
+        </blockquote>
+        <p class="lead-text">사람의 자리가 제물에게로 옮겨지고, 제물의 죽음이 사람의 길이 됩니다. 그 제물은 불에 온전히 태워져 “여호와를 만족시키는 향기”가 됩니다. 하나님께서 받으시는 것은 희생 그 자체가 아니라, 하나님을 만족시키는 생명입니다.</p>
+      </div>
+      <div class="glyph-box reveal"><svg viewBox="0 0 340 340" width="100%" height="100%">
+        <defs>
+          <radialGradient id="g1" cx="50%" cy="65%" r="70%">
+            <stop offset="0%" stop-color="#e8703f" stop-opacity="0.9"/>
+            <stop offset="55%" stop-color="#c1452a" stop-opacity="0.4"/>
+            <stop offset="100%" stop-color="#c1452a" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <circle cx="170" cy="220" r="140" fill="url(#g1)"/>
+        <path d="M170 60 C150 130 120 150 140 210 C150 250 190 250 200 210 C220 150 190 130 170 60Z" fill="none" stroke="#e8703f" stroke-width="1.4" opacity="0.85"/>
+        <path d="M170 110 C160 150 145 165 158 200 C165 222 178 222 184 200 C198 165 180 150 170 110Z" fill="#e8703f" opacity="0.55"/>
+        <line x1="60" y1="280" x2="280" y2="280" stroke="#cf9a52" stroke-width="1" opacity="0.4"/>
+      </svg></div>
+    </div>
+  </section>
+
+  <!-- 2. 소제 -->
+  <section class="offering" style="background:linear-gradient(180deg, transparent, rgba(207,154,82,0.06));">
+    <div class="offering-head reveal">
+      <span class="offering-no">02</span>
+      <h2 class="offering-kr">소제(素祭)</h2>
+      <span class="offering-en">Grain Offering</span>
+    </div>
+    <div class="grid-2">
+      <div class="reveal">
+        <p class="lead-text">소제에는 피가 없습니다. 대신 고운 가루와 기름과 유향이 있습니다. 이것은 죽음 이후의 삶, 곧 하나님께 드려진 생명의 상태를 보여줍니다. 곡식이 갈려 고운 가루가 되듯, 사람의 존재가 하나님 앞에서 부서지고 순전해질 때 그것은 향기로운 것이 됩니다.</p>
+        <blockquote>
+          “너는 소제물로 바치는 모든 제물에 소금을 쳐야 한다… 언약의 소금을 빼놓아서는 안 된다.”
+          <span class="ref">레위기 2:13</span>
+        </blockquote>
+        <p class="lead-text">소금은 부패를 막고 변하지 않는 것을 의미합니다. 하나님께 드려지는 생명은 일시적 헌신이 아니라, 영원한 언약 안에 있는 생명이어야 합니다.</p>
+      </div>
+      <div class="glyph-box reveal"><svg viewBox="0 0 340 340" width="100%" height="100%">
+        <circle cx="170" cy="170" r="120" fill="none" stroke="#cf9a52" stroke-width="1" opacity="0.3"/>
+        <g fill="#ece2cd" opacity="0.85">
+          <circle cx="120" cy="150" r="3"/><circle cx="150" cy="130" r="2.4"/><circle cx="180" cy="155" r="3.2"/>
+          <circle cx="200" cy="120" r="2.2"/><circle cx="140" cy="180" r="2.8"/><circle cx="170" cy="195" r="3"/>
+          <circle cx="210" cy="170" r="2.4"/><circle cx="190" cy="200" r="2.6"/><circle cx="160" cy="155" r="2"/>
+          <circle cx="225" cy="145" r="2.2"/><circle cx="130" cy="200" r="2.4"/><circle cx="200" cy="190" r="2"/>
+        </g>
+        <path d="M170 235 Q172 200 170 170" stroke="#cf9a52" stroke-width="1.2" fill="none" opacity="0.6"/>
+      </svg></div>
+    </div>
+  </section>
+
+  <!-- 3. 화목제 -->
+  <section class="offering" style="background:linear-gradient(180deg, transparent, rgba(91,107,68,0.08));">
+    <div class="offering-head reveal">
+      <span class="offering-no">03</span>
+      <h2 class="offering-kr">화목제(和睦祭)</h2>
+      <span class="offering-en">Peace Offering</span>
+    </div>
+    <div class="grid-2">
+      <div class="reveal">
+        <p class="lead-text">번제물이 하나님께 완전히 드려지는 것이라면, 화목제물은 하나님과 사람이 함께 나누는 교통입니다. 제물의 일부는 하나님께 드려지고, 일부는 사람이 먹습니다. 이것은 제사가 아니라 ‘연합’의 그림입니다.</p>
+        <blockquote>
+          “만일 그가 바치는 제물이 화목제물이고…”
+          <span class="ref">레위기 3:1</span>
+        </blockquote>
+        <p class="lead-text">하나님과 사람이 같은 제물을 나누어 먹는다는 것은, 생명을 함께 나눈다는 의미입니다. 하나님은 죄를 해결하는 데서 멈추지 않으십니다. 그분의 목적은 사람과 ‘함께하는 것’, 곧 연합입니다.</p>
+      </div>
+      <div class="glyph-box reveal"><svg viewBox="0 0 340 340" width="100%" height="100%">
+        <circle cx="135" cy="170" r="78" fill="none" stroke="#5b6b44" stroke-width="1.3" opacity="0.7"/>
+        <circle cx="205" cy="170" r="78" fill="none" stroke="#cf9a52" stroke-width="1.3" opacity="0.7"/>
+        <circle cx="170" cy="170" r="20" fill="#ece2cd" opacity="0.5"/>
+      </svg></div>
+    </div>
+  </section>
+
+  <!-- 4. 속죄제 -->
+  <section class="offering" style="background:linear-gradient(180deg, transparent, rgba(61,23,20,0.35));">
+    <div class="offering-head reveal">
+      <span class="offering-no">04</span>
+      <h2 class="offering-kr">속죄제(贖罪祭)</h2>
+      <span class="offering-en">Sin Offering</span>
+    </div>
+    <div class="grid-2">
+      <div class="reveal">
+        <p class="lead-text">연합의 길에는 여전히 문제가 있습니다. 죄입니다. 죄는 단순한 행동이 아니라 하나님과의 관계를 깨뜨리는 본질적인 문제이기에, 피가 필요합니다.</p>
+        <blockquote>
+          “제사장이 그들을 위해 속죄하여 주면, 그들은 용서받게 된다.”
+          <span class="ref">레위기 4:20</span>
+        </blockquote>
+        <p class="lead-text">하나님은 죄를 그냥 지나치지 않으시지만, 동시에 사람을 포기하지도 않으십니다. 죄에 대한 심판과 사람에 대한 사랑이 ‘속죄’라는 방식 안에서 만납니다.</p>
+      </div>
+      <div class="glyph-box reveal"><svg viewBox="0 0 340 340" width="100%" height="100%">
+        <path d="M170 70 L240 200 L100 200 Z" fill="none" stroke="#3d1714" stroke-width="1.5" opacity="0.5"/>
+        <path d="M170 70 L240 200 L100 200 Z" fill="#c1452a" opacity="0.12"/>
+        <circle cx="170" cy="155" r="6" fill="#c1452a" opacity="0.9"/>
+        <line x1="170" y1="161" x2="170" y2="200" stroke="#c1452a" stroke-width="1" opacity="0.6"/>
+      </svg></div>
+    </div>
+  </section>
+
+  <!-- 5. 속건제 -->
+  <section class="offering" style="background:linear-gradient(180deg, transparent, rgba(207,154,82,0.07));">
+    <div class="offering-head reveal">
+      <span class="offering-no">05</span>
+      <h2 class="offering-kr">속건제(贖愆祭)</h2>
+      <span class="offering-en">Guilt Offering</span>
+    </div>
+    <div class="grid-2">
+      <div class="reveal">
+        <p class="lead-text">죄는 하나님과의 관계만이 아니라, 사람과 사람 사이의 관계도 깨뜨립니다. 그래서 회복은 단순한 용서가 아니라 ‘회복된 관계’까지 포함합니다.</p>
+        <blockquote>
+          “그는… 배상해야 한다… 그 값에 오분의 일을 보태어…”
+          <span class="ref">레위기 5:16</span>
+        </blockquote>
+        <p class="lead-text">하나님은 온전한 회복을 원하십니다. 끊어진 관계를 그대로 두지 않으시고, 더한 것으로 채워 회복시키십니다.</p>
+      </div>
+      <div class="glyph-box reveal"><svg viewBox="0 0 340 340" width="100%" height="100%">
+        <path d="M110 170 a60 60 0 1 0 5 -35" fill="none" stroke="#cf9a52" stroke-width="1.4" opacity="0.7"/>
+        <path d="M95 120 L115 135 L100 145 Z" fill="#cf9a52" opacity="0.7"/>
+        <circle cx="170" cy="170" r="3" fill="#ece2cd"/>
+      </svg></div>
+    </div>
+  </section>
+
+  <!-- 꺼지지 않는 불 -->
+  <section id="ever-fire" style="text-align:center; align-items:center;">
+    <p class="lead-text reveal" style="text-align:center;">이 모든 규례는 반복되며 강조됩니다.</p>
+    <blockquote class="reveal" style="text-align:left;">
+      “제단 위의 불은 계속 타고 있어야 하며 꺼지지 않게 해야 한다.”
+      <span class="ref">레위기 6:13</span>
+    </blockquote>
+    <p class="lead-text reveal" style="text-align:center;">이 불은 단순한 불이 아닙니다. 하나님과 사람 사이의 관계가 끊어지지 않도록 지속되어야 함을 보여줍니다. 하나님께 나아가는 길은 일회적 사건이 아니라, 지속적인 삶입니다.</p>
+  </section>
+
+  <!-- 요약 -->
+  <section id="summary">
+    <h3 class="reveal" style="font-size:1.6rem; font-weight:600; margin-bottom:2.2rem; letter-spacing:0.04em;">다섯 제물, 하나의 길</h3>
+    <div class="reveal">
+      <div class="sum-row"><span class="num">01</span><span class="name">번제</span><span class="desc">하나님께 온전히 드려짐</span></div>
+      <div class="sum-row"><span class="num">02</span><span class="name">소제</span><span class="desc">변화된 생명</span></div>
+      <div class="sum-row"><span class="num">03</span><span class="name">화목제</span><span class="desc">하나님과의 교통</span></div>
+      <div class="sum-row"><span class="num">04</span><span class="name">속죄제</span><span class="desc">죄의 해결</span></div>
+      <div class="sum-row"><span class="num">05</span><span class="name">속건제</span><span class="desc">관계의 회복</span></div>
+    </div>
+  </section>
+
+  <!-- 마무리 -->
+  <section id="closing">
+    <p class="lead-text reveal">창조에서 시작된 하나님의 의도는 사람을 향한 것이었습니다. 사람은 생명을 받았고, 죄로 인해 하나님과 분리되었습니다. 그러나 하나님은 포기하지 않으셨습니다. 대신할 생명을 준비하시고, 그 생명을 통해 사람을 다시 부르시며, 결국 자신과 연합시키고자 하십니다.</p>
+    <blockquote class="reveal">
+      하나님께서 원하시는 것은 단순한 제사가 아니라, 사람 자신이 하나님께 드려지고, 변화된 생명으로 하나님과 함께하며, 결국 하나님과 하나 되는 것입니다.
+    </blockquote>
+    <p class="lead-text reveal">그래서 레위기는 율법이 아니라, 하나님의 마음입니다.<br>사람을 향하여 열어 놓으신, 생명의 길입니다.</p>
+    <div class="signoff reveal">하나님의 영원한 경륜 시리즈 · 부산교회</div>
+  </section>
+
+</main>
+
+<script>
+  // 스크롤 리빌
+  const items = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); obs.unobserve(e.target);} });
+  }, {threshold:0.15});
+  items.forEach(i=>obs.observe(i));
+
+  // 꺼지지 않는 불 — 캔버스 파티클
+  const canvas = document.getElementById('flame-canvas');
+  const ctx = canvas.getContext('2d');
+  let w, h;
+  function resize(){ w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  class Ember{
+    constructor(){ this.reset(); this.y = Math.random()*h; }
+    reset(){
+      this.x = w*0.5 + (Math.random()-0.5)*w*0.7;
+      this.y = h + 20;
+      this.size = 1 + Math.random()*2.6;
+      this.speed = 0.3 + Math.random()*0.9;
+      this.drift = (Math.random()-0.5)*0.4;
+      this.life = 0;
+      this.maxLife = 200 + Math.random()*300;
+      this.hue = Math.random() < 0.6 ? '193,69,42' : '207,154,82';
+      this.alpha = 0.15 + Math.random()*0.4;
+    }
+    update(){
+      this.y -= this.speed;
+      this.x += this.drift + Math.sin(this.y*0.01)*0.3;
+      this.life++;
+      if(this.y < -20 || this.life > this.maxLife) this.reset();
+    }
+    draw(){
+      const fade = 1 - (this.life/this.maxLife);
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(${this.hue},${this.alpha*Math.max(fade,0)})`;
+      ctx.fill();
+    }
+  }
+
+  const embers = Array.from({length: reduceMotion ? 0 : 70}, ()=> new Ember());
+
+  function loop(){
+    ctx.clearRect(0,0,w,h);
+    embers.forEach(e=>{ e.update(); e.draw(); });
+    requestAnimationFrame(loop);
+  }
+  if(!reduceMotion) loop();
+</script>
+
+</body>
+</html>
