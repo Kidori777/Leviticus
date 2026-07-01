@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>레위기 11-15장 | 하나님의 영원한 경륜 시리즈</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#15130f;
+    --ink-2:#1d1a15;
+    --ash:#6b6558;
+    --ash-soft:#8f8878;
+    --ivory:#eae3d1;
+    --ivory-dim:#c9c1ab;
+    --crimson:#8b2635;
+    --crimson-deep:#5c1620;
+    --gold:#c9a44c;
+    --gold-soft:#a98a3d;
+    --line: rgba(234,227,209,0.14);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ink);
+    color:var(--ivory);
+    font-family:'Noto Serif KR', serif;
+    font-style:normal;
+    overflow-x:hidden;
+    line-height:1.9;
+  }
+  em, i, .italic{font-style:normal !important;}
+
+  canvas#bg{
+    position:fixed;
+    top:0;left:0;
+    width:100%;height:100%;
+    z-index:0;
+    opacity:0.55;
+  }
+
+  .veil{
+    position:fixed;
+    inset:0;
+    background:radial-gradient(ellipse at 50% 20%, rgba(21,19,15,0) 0%, rgba(21,19,15,0.65) 65%, rgba(21,19,15,0.95) 100%);
+    z-index:1;
+    pointer-events:none;
+  }
+
+  .wrap{position:relative;z-index:2;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:40px 24px;
+    position:relative;
+  }
+  .hero .eyebrow{
+    font-size:13px;
+    letter-spacing:0.45em;
+    color:var(--gold);
+    font-weight:400;
+    margin-bottom:28px;
+    text-transform:uppercase;
+    opacity:0.9;
+  }
+  .hero h1{
+    font-size:clamp(38px, 7vw, 78px);
+    font-weight:900;
+    letter-spacing:0.02em;
+    color:var(--ivory);
+    line-height:1.25;
+    margin-bottom:18px;
+    text-shadow: 0 0 60px rgba(201,164,76,0.15);
+  }
+  .hero h1 span{
+    display:block;
+    font-size:clamp(16px, 2.4vw, 22px);
+    font-weight:300;
+    color:var(--ivory-dim);
+    letter-spacing:0.35em;
+    margin-top:22px;
+  }
+  .hero-sub{
+    max-width:620px;
+    margin-top:40px;
+    font-size:16px;
+    color:var(--ash-soft);
+    letter-spacing:0.02em;
+  }
+  .hero-verse{
+    margin-top:56px;
+    padding:28px 36px;
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    max-width:560px;
+  }
+  .hero-verse p{
+    font-size:19px;
+    color:var(--ivory);
+    font-weight:400;
+  }
+  .hero-verse cite{
+    display:block;
+    font-style:normal;
+    margin-top:14px;
+    font-size:13px;
+    letter-spacing:0.25em;
+    color:var(--gold);
+  }
+  .scroll-cue{
+    position:absolute;
+    bottom:40px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:12px;
+    letter-spacing:0.3em;
+    color:var(--ash-soft);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+  }
+  .scroll-cue .bar{
+    width:1px;
+    height:44px;
+    background:linear-gradient(var(--gold), transparent);
+    animation:cuemove 2.2s ease-in-out infinite;
+  }
+  @keyframes cuemove{
+    0%{transform:scaleY(0.3);transform-origin:top;}
+    50%{transform:scaleY(1);transform-origin:top;}
+    100%{transform:scaleY(0.3);transform-origin:bottom;}
+  }
+
+  /* ---------- PROGRESS SPINE ---------- */
+  .spine{
+    position:fixed;
+    right:26px;
+    top:50%;
+    transform:translateY(-50%);
+    z-index:20;
+    display:flex;
+    flex-direction:column;
+    gap:22px;
+    align-items:center;
+  }
+  .spine a{
+    width:8px;height:8px;
+    border-radius:50%;
+    background:var(--ash);
+    display:block;
+    transition:all .4s ease;
+    position:relative;
+  }
+  .spine a.active{
+    background:var(--gold);
+    box-shadow:0 0 12px rgba(201,164,76,0.7);
+    transform:scale(1.4);
+  }
+  .spine a::after{
+    content:attr(data-label);
+    position:absolute;
+    right:20px;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:11px;
+    letter-spacing:0.15em;
+    color:var(--ivory-dim);
+    white-space:nowrap;
+    opacity:0;
+    transition:opacity .3s ease;
+    pointer-events:none;
+  }
+  .spine a:hover::after{opacity:1;}
+  @media (max-width:900px){ .spine{display:none;} }
+
+  /* ---------- CHAPTER SECTION ---------- */
+  .chapter{
+    position:relative;
+    padding:140px 24px 100px;
+    max-width:760px;
+    margin:0 auto;
+    border-top:1px solid var(--line);
+  }
+  .chapter:first-of-type{border-top:none;}
+
+  .chapter-head{
+    display:flex;
+    align-items:baseline;
+    gap:22px;
+    margin-bottom:54px;
+    opacity:0;
+    transform:translateY(24px);
+    transition:opacity .9s ease, transform .9s ease;
+  }
+  .chapter-head.in-view{opacity:1;transform:translateY(0);}
+  .chapter-num{
+    font-size:64px;
+    font-weight:900;
+    color:transparent;
+    -webkit-text-stroke:1.4px var(--gold-soft);
+    line-height:1;
+  }
+  .chapter-title{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .chapter-title .en{
+    font-size:12px;
+    letter-spacing:0.3em;
+    color:var(--gold);
+    text-transform:uppercase;
+  }
+  .chapter-title h2{
+    font-size:clamp(24px,3.6vw,32px);
+    font-weight:700;
+    color:var(--ivory);
+  }
+
+  .reveal{
+    opacity:0;
+    transform:translateY(28px);
+    transition:opacity 1s ease, transform 1s ease;
+  }
+  .reveal.in-view{opacity:1;transform:translateY(0);}
+
+  p.body-text{
+    font-size:17px;
+    color:var(--ivory-dim);
+    margin-bottom:26px;
+    letter-spacing:0.01em;
+  }
+  p.body-text:last-child{margin-bottom:0;}
+
+  blockquote.verse{
+    margin:44px 0;
+    padding:26px 30px;
+    border-left:2px solid var(--crimson);
+    background:linear-gradient(90deg, rgba(139,38,53,0.12), transparent);
+    position:relative;
+  }
+  blockquote.verse p{
+    font-size:20px;
+    font-weight:500;
+    color:var(--ivory);
+    line-height:1.7;
+  }
+  blockquote.verse cite{
+    display:block;
+    font-style:normal;
+    margin-top:12px;
+    font-size:12.5px;
+    letter-spacing:0.2em;
+    color:var(--gold);
+  }
+
+  .divider-image{
+    margin:70px 0;
+    height:1px;
+    background:linear-gradient(90deg, transparent, var(--line), transparent);
+    position:relative;
+  }
+  .divider-image::before{
+    content:'✦';
+    position:absolute;
+    left:50%;top:50%;
+    transform:translate(-50%,-50%);
+    color:var(--gold-soft);
+    font-size:12px;
+    background:var(--ink);
+    padding:0 14px;
+  }
+
+  /* ---------- SIGNATURE: TWO BIRDS MOMENT ---------- */
+  .birds-moment{
+    max-width:760px;
+    margin:0 auto;
+    padding:120px 24px;
+    text-align:center;
+    position:relative;
+  }
+  .birds-canvas-wrap{
+    width:100%;
+    max-width:520px;
+    margin:0 auto 40px;
+    height:260px;
+    position:relative;
+  }
+  #birdsCanvas{width:100%;height:100%;}
+  .birds-caption{
+    font-size:14px;
+    letter-spacing:0.18em;
+    color:var(--ash-soft);
+  }
+  .birds-caption strong{
+    color:var(--gold);
+    font-weight:500;
+  }
+
+  /* ---------- FINAL DECLARATION ---------- */
+  .finale{
+    max-width:720px;
+    margin:0 auto;
+    padding:100px 24px 200px;
+    text-align:center;
+  }
+  .finale .word{
+    display:inline-block;
+    font-size:14px;
+    letter-spacing:0.3em;
+    color:var(--gold);
+    margin-bottom:34px;
+    text-transform:uppercase;
+  }
+  .finale h3{
+    font-size:clamp(26px,4vw,38px);
+    font-weight:700;
+    color:var(--ivory);
+    line-height:1.6;
+    margin-bottom:26px;
+  }
+  .finale p.small{
+    font-size:16px;
+    color:var(--ivory-dim);
+    margin-bottom:20px;
+  }
+  .finale .closing{
+    margin-top:60px;
+    font-size:clamp(24px,3.6vw,34px);
+    font-weight:900;
+    color:var(--crimson);
+    letter-spacing:0.02em;
+    text-shadow:0 0 40px rgba(139,38,53,0.35);
+  }
+
+  footer{
+    text-align:center;
+    padding:60px 24px 90px;
+    font-size:12px;
+    letter-spacing:0.25em;
+    color:var(--ash);
+    border-top:1px solid var(--line);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+<div class="veil"></div>
+
+<nav class="spine" id="spine">
+  <a href="#s11" data-label="11장 · 구별" class="active"></a>
+  <a href="#s12" data-label="12장 · 탄생"></a>
+  <a href="#s13" data-label="13장 · 드러남"></a>
+  <a href="#s14" data-label="14장 · 회복"></a>
+  <a href="#s15" data-label="15장 · 근원"></a>
+  <a href="#sfinale" data-label="연합"></a>
+</nav>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="eyebrow">하나님의 영원한 경륜 시리즈</div>
+    <h1>거룩과 정결의 경륜
+      <span>레위기 11장 – 15장</span>
+    </h1>
+    <p class="hero-sub">
+      먹는 것에서 태어나는 것으로, 드러나는 병에서 생명의 근원까지 —<br>
+      하나님은 사람의 가장 구체적인 자리로 내려오셔서, 다시 사람 가운데 거하실 길을 여십니다.
+    </p>
+    <div class="hero-verse">
+      <p>“여호와께서 모세와 아론에게 말씀하셨다.”</p>
+      <cite>레위기 11:1</cite>
+    </div>
+    <div class="scroll-cue">
+      <span>SCROLL</span>
+      <span class="bar"></span>
+    </div>
+  </section>
+
+  <!-- CHAPTER 11 -->
+  <section class="chapter" id="s11">
+    <div class="chapter-head reveal">
+      <div class="chapter-num">11</div>
+      <div class="chapter-title">
+        <span class="en">Discernment</span>
+        <h2>구별 — 생명과 죽음을 가르치시다</h2>
+      </div>
+    </div>
+
+    <p class="body-text reveal">이 한 문장은 단순한 시작이 아니라, 하나님께서 사람의 삶 깊은 곳까지 들어오시겠다는 선언처럼 들립니다. 창세 때에 빛을 부르시던 그 음성이 이제는 사람의 일상, 곧 먹고 마시는 문제에까지 이르고 있습니다. 창조의 하나님이 피조물의 가장 구체적인 삶의 자리로 내려오신 것입니다. 이는 단순한 규례의 시작이 아니라, 하나님과 사람 사이의 관계가 얼마나 깊어져 가고 있는지를 보여주는 장면입니다.</p>
+
+    <blockquote class="verse reveal">
+      <p>“너희가 먹어도 되는 것은 이러하다.”</p>
+      <cite>레위기 11:2</cite>
+    </blockquote>
+
+    <p class="body-text reveal">하나님은 사람에게 단순히 금지하시는 분이 아니라, 먼저 ‘허락하시는 분’으로 나타나십니다. 창세기에서 “모든 채소와 열매를 너희에게 주노라” 하셨던 그 하나님이, 이제는 타락 이후의 세계 속에서 무엇이 생명에 속하고 무엇이 죽음에 속하는지를 구별하도록 이끄십니다. 먹는다는 것은 생명을 받아들이는 행위입니다. 그러므로 하나님은 사람에게 생명과 죽음을 분별하도록 가르치시는 것입니다.</p>
+
+    <p class="body-text reveal">굽이 갈라지고 되새김질하는 짐승, 지느러미와 비늘이 있는 물고기… 이러한 기준들은 단순한 위생 규칙이 아닙니다. 이것은 ‘질서’와 ‘생명성’을 드러내는 상징입니다. 창조 때 하나님께서 “보시기에 좋았다” 하신 그 질서가, 이제 타락 이후의 세계 속에서도 여전히 남아 있으며, 사람은 그 질서를 따라 살아가도록 선택받은 존재입니다.</p>
+
+    <p class="body-text reveal">그러나 동시에 하나님은 분명히 말씀하십니다.</p>
+
+    <blockquote class="verse reveal">
+      <p>“너희는 이런 것들로 너희 자신을 더럽혀서는 안 된다.”</p>
+      <cite>레위기 11:43</cite>
+    </blockquote>
+
+    <p class="body-text reveal">여기서 처음으로 드러나는 것은 ‘사람’의 상태입니다. 사람은 단순히 생명을 취하는 존재가 아니라, 자신이 무엇을 받아들이느냐에 따라 ‘존재 자체가 변화되는 존재’입니다. 하나님은 사람을 창조하실 때 단순한 육체가 아니라, 하나님과 교통할 수 있는 존재로 지으셨습니다. 그러나 타락 이후 사람은 더러움에 쉽게 물들 수 있는 상태가 되었고, 이제 하나님은 그 사람을 다시 ‘거룩’으로 이끌고자 하십니다.</p>
+
+    <blockquote class="verse reveal">
+      <p>“너희는 거룩하여라. 왜냐하면 내가 거룩하기 때문이다.”</p>
+      <cite>레위기 11:44</cite>
+    </blockquote>
+
+    <p class="body-text reveal">이 말씀은 단순한 도덕적 요구가 아닙니다. 이것은 하나님의 의도, 곧 사람을 다시 하나님과 같은 영역으로 이끌려는 경륜입니다. 창조의 시작에서 하나님은 자신의 형상대로 사람을 지으셨습니다. 그리고 이제 그 형상이 다시 회복되기를 원하십니다. 거룩은 단순한 상태가 아니라, 하나님과 ‘같은 방향으로 존재하는 것’입니다.</p>
+
+    <p class="body-text reveal">이 흐름은 레위기 12장으로 이어집니다.</p>
+  </section>
+
+  <div class="divider-image"></div>
+
+  <!-- CHAPTER 12 -->
+  <section class="chapter" id="s12">
+    <div class="chapter-head reveal">
+      <div class="chapter-num">12</div>
+      <div class="chapter-title">
+        <span class="en">Birth</span>
+        <h2>탄생 — 생명의 시작에 드리운 그림자</h2>
+      </div>
+    </div>
+
+    <blockquote class="verse reveal">
+      <p>“여인이 임신하여 아이를 낳으면…”</p>
+      <cite>레위기 12:2</cite>
+    </blockquote>
+
+    <p class="body-text reveal">생명이 태어나는 장면입니다. 그러나 놀랍게도 그 생명의 시작은 ‘부정’이라는 상태로 설명됩니다. 이것은 생명 자체가 더럽다는 의미가 아니라, 타락 이후의 인간 생명이 이미 죽음의 영역 안에 놓여 있음을 보여줍니다. 창세기에서 “너는 흙이니 흙으로 돌아갈 것이다” 하신 그 선언이, 태어남의 순간에도 그림자처럼 드리워져 있는 것입니다.</p>
+
+    <p class="body-text reveal">그렇기에 하나님은 ‘정결하게 되는 과정’을 마련하십니다.</p>
+
+    <blockquote class="verse reveal">
+      <p>“제사장이 그 여인을 위하여 속죄해야 한다.”</p>
+      <cite>레위기 12:7</cite>
+    </blockquote>
+
+    <p class="body-text reveal">여기서 중요한 것은 ‘속죄’입니다. 생명은 단순히 태어나는 것으로 완성되지 않습니다. 하나님과의 관계 속에서 회복될 때 비로소 참된 생명이 됩니다. 즉, 생명은 창조에서 시작되지만, 구속을 통해 완성됩니다.</p>
+
+    <p class="body-text reveal">레위기 13장으로 들어가면, 그 흐름은 더욱 깊어집니다.</p>
+  </section>
+
+  <div class="divider-image"></div>
+
+  <!-- CHAPTER 13 -->
+  <section class="chapter" id="s13">
+    <div class="chapter-head reveal">
+      <div class="chapter-num">13</div>
+      <div class="chapter-title">
+        <span class="en">Exposure</span>
+        <h2>드러남 — 내면의 부패가 겉으로 나타나다</h2>
+      </div>
+    </div>
+
+    <blockquote class="verse reveal">
+      <p>“어떤 사람이 피부에 나병이 생기면…”</p>
+      <cite>레위기 13:2</cite>
+    </blockquote>
+
+    <p class="body-text reveal">이제 문제는 외부가 아니라 ‘사람 내부’에서 드러납니다. 나병은 단순한 질병이 아니라, ‘내면의 부패가 외부로 드러난 상태’를 상징합니다. 하나님은 이를 통해 말씀하십니다. 사람의 문제는 환경이 아니라, 존재 자체에 있다는 것입니다.</p>
+
+    <p class="body-text reveal">그 병은 격리됩니다.</p>
+
+    <blockquote class="verse reveal">
+      <p>“그는 혼자 살아야 하며, 그의 거처는 진영 밖이다.”</p>
+      <cite>레위기 13:46</cite>
+    </blockquote>
+
+    <p class="body-text reveal">이 장면은 에덴동산에서 쫓겨난 인간의 모습을 떠올리게 합니다. 하나님과의 단절, 공동체와의 분리. 죄는 항상 관계를 끊어내는 방향으로 작용합니다. 이것이 죽음의 본질입니다.</p>
+
+    <p class="body-text reveal">그러나 하나님은 여기서 멈추지 않으십니다.</p>
+
+    <p class="body-text reveal">레위기 14장에서 새로운 장면이 열립니다.</p>
+  </section>
+
+  <div class="divider-image"></div>
+
+  <!-- CHAPTER 14 -->
+  <section class="chapter" id="s14">
+    <div class="chapter-head reveal">
+      <div class="chapter-num">14</div>
+      <div class="chapter-title">
+        <span class="en">Restoration</span>
+        <h2>회복 — 죽음을 통해 생명이 풀려나다</h2>
+      </div>
+    </div>
+
+    <blockquote class="verse reveal">
+      <p>“나병 환자를 정결하게 하는 날…”</p>
+      <cite>레위기 14:2</cite>
+    </blockquote>
+
+    <p class="body-text reveal">여기서 중요한 것은 ‘회복의 날’입니다. 하나님은 단순히 부정을 선언하는 분이 아니라, 반드시 회복의 길을 준비하시는 분입니다.</p>
+
+    <blockquote class="verse reveal">
+      <p>“새 두 마리를 가져다가… 하나는 죽이고 하나는 놓아준다.”</p>
+      <cite>레위기 14:5-7</cite>
+    </blockquote>
+
+    <p class="body-text reveal">죽음과 생명이 동시에 나타납니다. 한 생명이 죽음으로 들어가고, 다른 생명은 자유롭게 날아갑니다. 이것은 단순한 의식이 아니라, 하나님의 깊은 경륜을 보여주는 그림입니다. 죽음을 통해 생명이 풀려나는 구조, 이것이 바로 구속의 원리입니다.</p>
+
+    <p class="body-text reveal">그리고 그 피는 사람의 귀와 손과 발에 발라집니다.</p>
+
+    <p class="body-text reveal">듣는 것, 행하는 것, 걸어가는 길—사람의 전 존재가 다시 하나님께 속하게 되는 것입니다. 이것은 단순한 정결이 아니라, ‘재창조’에 가까운 사건입니다.</p>
+
+    <p class="body-text reveal">더 나아가 하나님은 집까지도 정결하게 하십니다 (레위기 14:34 이하). 이는 죄와 부정이 개인을 넘어 환경과 공동체 전체에 영향을 미친다는 사실을 보여줍니다. 그러나 동시에 하나님의 회복 역시 개인을 넘어 공동체 전체로 확장됩니다.</p>
+  </section>
+
+  <!-- SIGNATURE MOMENT: TWO BIRDS -->
+  <section class="birds-moment">
+    <div class="birds-canvas-wrap">
+      <canvas id="birdsCanvas"></canvas>
+    </div>
+    <p class="birds-caption reveal">한 마리는 <strong>죽고</strong>, 한 마리는 <strong>놓입니다</strong>. — 레위기 14:5-7</p>
+  </section>
+
+  <div class="divider-image"></div>
+
+  <!-- CHAPTER 15 -->
+  <section class="chapter" id="s15">
+    <div class="chapter-head reveal">
+      <div class="chapter-num">15</div>
+      <div class="chapter-title">
+        <span class="en">The Source</span>
+        <h2>근원 — 존재의 가장 깊은 곳까지</h2>
+      </div>
+    </div>
+
+    <p class="body-text reveal">레위기 15장에 이르면, 가장 깊은 차원의 문제가 드러납니다.</p>
+
+    <blockquote class="verse reveal">
+      <p>“몸에 유출이 있으면…”</p>
+      <cite>레위기 15:2</cite>
+    </blockquote>
+
+    <p class="body-text reveal">여기서 다루는 것은 생명의 근원과 관련된 영역입니다. 생명을 낳는 기능조차 부정과 연결되어 있습니다. 이는 인간 존재의 가장 깊은 곳까지 타락의 영향이 미쳤음을 보여줍니다.</p>
+
+    <p class="body-text reveal">그러나 여기서도 하나님은 길을 여십니다.</p>
+
+    <blockquote class="verse reveal">
+      <p>“그를 위하여 속죄해야 한다.”</p>
+      <cite>레위기 15:15</cite>
+    </blockquote>
+
+    <p class="body-text reveal">끝까지 반복되는 이 메시지—속죄, 회복, 다시 하나님께로. 이것이 레위기의 흐름입니다.</p>
+
+    <p class="body-text reveal">그리고 이 모든 말씀은 마지막 선언으로 수렴됩니다.</p>
+
+    <blockquote class="verse reveal">
+      <p>“그들이 내 성막을 더럽혀서 죽는 일이 없게 하려는 것이다.”</p>
+      <cite>레위기 15:31</cite>
+    </blockquote>
+  </section>
+
+  <!-- FINALE -->
+  <section class="finale" id="sfinale">
+    <span class="word reveal">연합을 향하여</span>
+
+    <p class="body-text reveal">여기서 하나님의 궁극적인 목적이 드러납니다.</p>
+
+    <h3 class="reveal">하나님은 사람을 단순히 깨끗하게 만들기 원하시는 것이 아닙니다.<br>하나님은 사람 가운데 거하시기를 원하십니다.</h3>
+
+    <p class="body-text reveal">창조에서 시작된 하나님의 뜻—사람과 함께 거하시려는 그 의도는, 타락으로 인해 끊어진 것처럼 보였지만, 이제 다시 회복의 길 위에 놓여 있습니다. 음식의 구별에서 시작하여, 생명의 탄생, 인간의 내면, 공동체, 그리고 가장 깊은 존재의 근원까지… 하나님은 모든 영역을 통과하시며 하나의 방향으로 이끄십니다.</p>
+
+    <p class="body-text reveal">그 방향은 바로 ‘연합’입니다.</p>
+
+    <p class="body-text reveal" style="font-size:19px;color:var(--ivory);">하나님과 사람의 연합.</p>
+
+    <p class="body-text reveal">거룩은 그 연합을 위한 조건이며, 정결은 그 연합을 위한 과정이며, 속죄는 그 연합을 이루기 위한 길입니다.</p>
+
+    <p class="body-text reveal">그리고 이 모든 흐름 속에서, 독자는 어느 순간 깨닫게 됩니다. 이 규례들은 단순한 율법이 아니라, 하나님께서 사람을 다시 자신과 하나 되게 하시려는 장대한 이야기라는 사실을.</p>
+
+    <p class="body-text reveal">그 이야기의 끝은 아직 닫히지 않았지만, 그 방향은 분명합니다.</p>
+
+    <p class="closing reveal">하나님은 끝내 사람 가운데 거하시려 합니다.</p>
+  </section>
+
+  <footer>
+    하나님의 영원한 경륜 시리즈 · 레위기 11 – 15장
+  </footer>
+
+</div>
+
+<script>
+// ---------- Background ash / ember particle canvas ----------
+const bg = document.getElementById('bg');
+const bctx = bg.getContext('2d');
+let W, H, particles = [];
+
+function resizeBg(){
+  W = bg.width = window.innerWidth;
+  H = bg.height = document.documentElement.scrollHeight;
+}
+window.addEventListener('resize', resizeBg);
+resizeBg();
+
+function makeParticles(){
+  particles = [];
+  const count = Math.min(70, Math.floor(W*H/28000));
+  for(let i=0;i<count;i++){
+    particles.push({
+      x: Math.random()*W,
+      y: Math.random()*H,
+      r: Math.random()*1.6 + 0.4,
+      vy: -(Math.random()*0.25 + 0.08),
+      vx: (Math.random()-0.5)*0.12,
+      alpha: Math.random()*0.5 + 0.15,
+      hue: Math.random() > 0.75 ? 'gold' : 'ivory'
+    });
+  }
+}
+makeParticles();
+window.addEventListener('resize', makeParticles);
+
+function drawBg(){
+  bctx.clearRect(0,0,W,H);
+  const scrollY = window.scrollY;
+  particles.forEach(p=>{
+    p.y += p.vy;
+    p.x += p.vx + Math.sin((p.y+scrollY)*0.01)*0.15;
+    if(p.y < -10) p.y = H + 10;
+    if(p.y > H + 10) p.y = -10;
+    bctx.beginPath();
+    bctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+    bctx.fillStyle = p.hue === 'gold'
+      ? `rgba(201,164,76,${p.alpha})`
+      : `rgba(234,227,209,${p.alpha*0.6})`;
+    bctx.fill();
+  });
+  requestAnimationFrame(drawBg);
+}
+drawBg();
+
+// ---------- Scroll reveal ----------
+const revealEls = document.querySelectorAll('.reveal, .chapter-head');
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add('in-view');
+    }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+revealEls.forEach(el=>io.observe(el));
+
+// ---------- Spine active state ----------
+const spineLinks = document.querySelectorAll('.spine a');
+const sections = ['s11','s12','s13','s14','s15','sfinale'].map(id=>document.getElementById(id));
+function updateSpine(){
+  let current = 0;
+  sections.forEach((sec,i)=>{
+    if(sec && sec.getBoundingClientRect().top < window.innerHeight*0.5){
+      current = i;
+    }
+  });
+  spineLinks.forEach((a,i)=>a.classList.toggle('active', i===current));
+}
+window.addEventListener('scroll', updateSpine);
+updateSpine();
+
+// ---------- Two birds signature animation ----------
+const bcanvas = document.getElementById('birdsCanvas');
+const bctx2 = bcanvas.getContext('2d');
+let bw, bh, t=0, birdsStarted=false;
+
+function resizeBirds(){
+  const rect = bcanvas.getBoundingClientRect();
+  bw = bcanvas.width = rect.width;
+  bh = bcanvas.height = rect.height;
+}
+window.addEventListener('resize', resizeBirds);
+resizeBirds();
+
+function drawBird(x,y,scale,alpha,wingPhase,color){
+  bctx2.save();
+  bctx2.translate(x,y);
+  bctx2.scale(scale,scale);
+  bctx2.globalAlpha = alpha;
+  bctx2.strokeStyle = color;
+  bctx2.lineWidth = 2.4;
+  bctx2.lineCap = 'round';
+  const wing = Math.sin(wingPhase)*10;
+  bctx2.beginPath();
+  bctx2.moveTo(-14, wing);
+  bctx2.quadraticCurveTo(-6,-6-wing*0.3,0,0);
+  bctx2.quadraticCurveTo(6,-6-wing*0.3,14,wing);
+  bctx2.stroke();
+  bctx2.restore();
+}
+
+function animateBirds(){
+  bctx2.clearRect(0,0,bw,bh);
+  t += 0.03;
+
+  // Bird 1: descends and fades (death)
+  const t1 = Math.min(t/4, 1);
+  const x1 = bw*0.32;
+  const y1 = bh*0.28 + t1*bh*0.5;
+  const alpha1 = Math.max(0, 1 - t1*1.1);
+  drawBird(x1, y1, 1 - t1*0.3, alpha1, t*8, 'rgba(139,38,53,0.9)');
+
+  // Bird 2: rises and flies off (life)
+  const t2 = Math.max(0, Math.min((t-0.6)/4, 1));
+  const x2 = bw*0.62 + t2*bw*0.28;
+  const y2 = bh*0.55 - t2*bh*0.42;
+  const alpha2 = t2 < 0.85 ? Math.min(1, t2*2) : Math.max(0, 1-(t2-0.85)*6);
+  drawBird(x2, y2, 1, alpha2, t*10, 'rgba(201,164,76,0.95)');
+
+  if(t > 5.2) t = 0;
+  requestAnimationFrame(animateBirds);
+}
+
+const birdsObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting && !birdsStarted){
+      birdsStarted = true;
+      resizeBirds();
+      animateBirds();
+    }
+  });
+}, { threshold: 0.3 });
+birdsObserver.observe(document.querySelector('.birds-moment'));
+</script>
+
+</body>
+</html>
